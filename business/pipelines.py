@@ -56,9 +56,9 @@ class LJIAPipeline(object):
 
     def process_item(self, item, spider):
         if spider.name == "ljia":
-            # self.collection.insert(item)
-            # print("保存成功")
-            print(item)
+            self.collection.insert(item)
+            print("保存成功")
+            # print(item)
         return item
 
 

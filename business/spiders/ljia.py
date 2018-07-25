@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-import scrapy
+import scrapy,re
 from scrapy_redis.spiders import RedisSpider
 
 
 class LjiaSpider(RedisSpider):
     name = 'ljia'
     allowed_domains = ['lianjia.com']
-    start_urls = ['https://wh.lianjia.com/zufang/pg1/']
+    # start_urls = ['https://wh.lianjia.com/zufang/pg1/']
+    redis_key = "ljia"
 
     def parse(self, response):
         # 房源列表
@@ -24,18 +25,18 @@ class LjiaSpider(RedisSpider):
                 )
 
         # 下一页地址
-        page = dict(response.xpath("//div[@class='page-box house-lst-page-box']/@page-data").extract_first())
-        total = page["totalPage"]
-        current = page["curPage"]
-        if current < total:
-            next_url = "https://wh.lianjia.com/zufang/pg{}/".format(current+1)
+        page = response.xpath("//div[@class='page-box house-lst-page-box']/@page-data").extract_first()
+        total,current = re.findall(r'\{"totalPage":(\d+?),"curPage":(\d+?)\}',page)[0]
+
+        if int(current) < int(total):
+            next_url = "https://wh.lianjia.com/zufang/pg{}/".format(int(current)+1)
             print(next_url)
 
-            # yield scrapy.Request(
-            #     url=next_url,
-            #     callback=self.parse
-            # )
-            #
+            yield scrapy.Request(
+                url=next_url,
+                callback=self.parse
+            )
+
 
 
 
@@ -60,6 +61,36 @@ class LjiaSpider(RedisSpider):
         item["house_img"] = response.xpath("//div[@class='thumbnail']/ul/li/img/@src").extract()
 
         yield item
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
