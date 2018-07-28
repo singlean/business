@@ -78,11 +78,20 @@ class AJKAPipeline(object):
         return item
 
 
+class XLJIAPipeline(object):
 
+    def open_spider(self, spider):
+        # 创建一个mongo客户端对象
+        client = MongoClient()
+        # 创建一个集合保存数据
+        self.collection = client["spider"]["xljia"]
 
-
-
-
+    def process_item(self, item, spider):
+        if spider.name == "xljia":
+            self.collection.insert(item)
+            print("保存成功")
+            # print(item)
+        return item
 
 
 

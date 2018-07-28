@@ -96,6 +96,7 @@ ITEM_PIPELINES = {
     'business.pipelines.FTXPipeline': 302,
     'business.pipelines.LJIAPipeline': 303,
     'business.pipelines.AJKAPipeline': 304,
+    'business.pipelines.XLJIAPipeline': 305,
 
 }
 
